@@ -1,0 +1,87 @@
+{
+  "name": "estate-crm",
+  "version": "1.0.0",
+  "description": "Real estate client relationship manager",
+  "author": "Destiny Epperson",
+  "private": true,
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "next dev -H 0.0.0.0 -p 3000",
+    "build": "next build",
+    "start": "next start -H 0.0.0.0 -p 3000",
+    "lint": "next lint",
+    "electron:dev": "npm run build && node scripts/prep-standalone.js && electron .",
+    "electron:build": "npm run build && node scripts/prep-standalone.js && node scripts/package-win.js"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.460.0",
+    "next": "^15.5.15",
+    "nodemailer": "^6.9.16",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "tailwind-merge": "^2.5.4"
+  },
+  "devDependencies": {
+    "@electron/packager": "^19.1.0",
+    "@tailwindcss/postcss": "^4.0.0-beta.4",
+    "@types/node": "^22",
+    "@types/nodemailer": "^6.4.16",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "dotenv": "^17.4.2",
+    "electron": "^41.2.2",
+    "electron-builder": "^26.8.1",
+    "tailwindcss": "^4.0.0-beta.4",
+    "typescript": "^5"
+  },
+  "build": {
+    "appId": "com.destinyepperson.estatecrm",
+    "productName": "Estate CRM",
+    "asar": false,
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": ".next/standalone",
+        "to": "nextjs/.next/standalone",
+        "filter": [
+          "**/*",
+          "!**/.git"
+        ]
+      },
+      {
+        "from": ".next/static",
+        "to": "nextjs/.next/standalone/.next/static"
+      },
+      {
+        "from": "public",
+        "to": "nextjs/public"
+      },
+      {
+        "from": ".env.local",
+        "to": "nextjs/.env.local",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "electron/icon.ico"
+    }
+  }
+}

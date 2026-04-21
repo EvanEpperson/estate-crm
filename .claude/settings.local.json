@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(CSC_IDENTITY_AUTO_DISCOVERY=false npx electron-builder --win)",
+      "Bash(node /c/claude/scripts/package-win.js)"
+    ]
+  }
+}
