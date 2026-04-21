@@ -1,16 +1,9 @@
 import { neon } from "@neondatabase/serverless";
 
-function getSql() {
-  const url = process.env.DATABASE_URL;
-  if (!url) throw new Error("DATABASE_URL is not set. Add it to .env.local");
-  return neon(url);
-}
-
-// Cache per process (reused across requests in same serverless instance)
-let _sql: ReturnType<typeof neon> | null = null;
 function sql() {
-  if (!_sql) _sql = getSql();
-  return _sql;
+  const url = process.env.DATABASE_URL;
+  if (!url) throw new Error("DATABASE_URL is not set. Add it to environment variables.");
+  return neon(url);
 }
 
 // ─── Schema init ─────────────────────────────────────────────────────────────
