@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Building2, Lock } from "lucide-react";
+import Image from "next/image";
+import { Lock } from "lucide-react";
 import { Button, Input } from "@/components/ui";
 import { Suspense } from "react";
 
@@ -42,10 +43,10 @@ function LoginForm() {
     <div className="min-h-screen gradient-bg flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-8">
-          <div className="size-16 rounded-2xl bg-[var(--color-primary)] text-[var(--color-primary-foreground)] grid place-items-center shadow-xl shadow-[color-mix(in_oklch,var(--color-primary)_30%,transparent)] mb-4">
-            <Building2 className="size-8" />
+          <div className="size-24 rounded-2xl bg-white grid place-items-center shadow-lg mb-4 overflow-hidden">
+            <Image src="/logo.png" alt="HB Group" width={96} height={96} className="size-24 object-contain" priority />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight">Estate CRM</h1>
+          <h1 className="text-2xl font-bold tracking-tight">HB Group</h1>
           <p className="text-sm text-[var(--color-muted-foreground)] mt-1">Sign in to continue</p>
         </div>
 

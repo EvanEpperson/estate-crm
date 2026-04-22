@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Home, Users, Mail, UserPlus, Building2, LogOut } from "lucide-react";
+import { Home, Users, Mail, UserPlus, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -25,11 +26,11 @@ export default function Nav() {
   return (
     <aside className="hidden md:flex w-64 shrink-0 flex-col border-r border-[var(--color-border)] glass sticky top-0 h-screen">
       <div className="px-6 py-6 flex items-center gap-3">
-        <div className="size-10 rounded-xl bg-[var(--color-primary)] text-[var(--color-primary-foreground)] grid place-items-center shadow-lg shadow-[color-mix(in_oklch,var(--color-primary)_30%,transparent)]">
-          <Building2 className="size-5" />
+        <div className="size-11 rounded-xl bg-white grid place-items-center shadow-sm overflow-hidden">
+          <Image src="/logo.png" alt="HB Group" width={44} height={44} className="size-11 object-contain" priority />
         </div>
         <div>
-          <div className="font-semibold leading-tight">Estate CRM</div>
+          <div className="font-semibold leading-tight tracking-wide">HB Group</div>
           <div className="text-xs text-[var(--color-muted-foreground)]">Your book of business</div>
         </div>
       </div>

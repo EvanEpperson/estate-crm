@@ -16,7 +16,7 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
+        <h1 className="text-3xl font-bold tracking-tight">HB Group</h1>
         <p className="text-[var(--color-muted-foreground)] mt-1">
           Here's what's happening across your book of business.
         </p>

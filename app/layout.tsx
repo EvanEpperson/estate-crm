@@ -3,7 +3,7 @@ import "./globals.css";
 import Nav from "@/components/nav";
 
 export const metadata: Metadata = {
-  title: "Real Estate CRM",
+  title: "HB Group",
   description: "Client relationships, organized.",
 };
 
