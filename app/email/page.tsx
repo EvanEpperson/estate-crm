@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Avatar, Badge, Button, Card, CardContent, Input, Label, Textarea } from "@/components/ui";
-import { Mail, Send, Search, Users, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Mail, Send, Search, Users, AlertTriangle, CheckCircle2, Paperclip, X, FileText, Image as ImageIcon } from "lucide-react";
 import type { Client } from "@/lib/db";
 
 type Result = { sent: number; failed: number; results: { id: number; email: string; ok: boolean; error?: string }[] };
@@ -15,6 +15,7 @@ export default function EmailPage() {
   const [body, setBody] = useState(
     "Hi {{first_name}},\n\nJust wanted to check in and see how things are going in your new home.\n\nBest,\nYour Agent"
   );
+  const [attachments, setAttachments] = useState<File[]>([]);
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -72,13 +73,22 @@ export default function EmailPage() {
       setError("Select at least one recipient.");
       return;
     }
+    const totalBytes = attachments.reduce((n, f) => n + f.size, 0);
+    if (totalBytes > 20 * 1024 * 1024) {
+      setError("Attachments exceed 20 MB total.");
+      return;
+    }
     if (!confirm(`Send this email to ${selected.size} recipient${selected.size === 1 ? "" : "s"}?`)) return;
     setSending(true);
     try {
+      const fd = new FormData();
+      fd.append("subject", subject);
+      fd.append("body", body);
+      fd.append("recipientIds", JSON.stringify([...selected]));
+      for (const f of attachments) fd.append("attachments", f, f.name);
       const res = await fetch("/api/email", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subject, body, recipientIds: [...selected] }),
+        body: fd,
       });
       const data = await res.json();
       if (!res.ok) {
@@ -168,6 +178,57 @@ export default function EmailPage() {
                   <code className="text-[var(--color-foreground)]">{"{{full_name}}"}</code>,{" "}
                   <code className="text-[var(--color-foreground)]">{"{{city}}"}</code>
                 </p>
+              </div>
+              <div>
+                <Label>Attachments</Label>
+                <div className="flex items-center gap-2 mt-1">
+                  <label className="inline-flex items-center gap-2 cursor-pointer rounded-xl border border-[var(--color-border)] px-3 py-2 text-sm hover:bg-[var(--color-accent)]">
+                    <Paperclip className="size-4" />
+                    Add files
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*,application/pdf"
+                      className="hidden"
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files ?? []);
+                        setAttachments((prev) => [...prev, ...files]);
+                        e.target.value = "";
+                      }}
+                    />
+                  </label>
+                  <span className="text-xs text-[var(--color-muted-foreground)]">
+                    Images or PDFs, up to 10 MB each, 20 MB total.
+                  </span>
+                </div>
+                {attachments.length > 0 && (
+                  <ul className="mt-2 space-y-1.5">
+                    {attachments.map((f, i) => (
+                      <li
+                        key={`${f.name}-${i}`}
+                        className="flex items-center gap-2 text-sm rounded-lg border border-[var(--color-border)] px-2.5 py-1.5"
+                      >
+                        {f.type === "application/pdf" ? (
+                          <FileText className="size-4 shrink-0 text-[var(--color-muted-foreground)]" />
+                        ) : (
+                          <ImageIcon className="size-4 shrink-0 text-[var(--color-muted-foreground)]" />
+                        )}
+                        <span className="truncate flex-1">{f.name}</span>
+                        <span className="text-xs text-[var(--color-muted-foreground)] shrink-0">
+                          {(f.size / 1024 / 1024).toFixed(2)} MB
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setAttachments((prev) => prev.filter((_, j) => j !== i))}
+                          className="p-1 rounded hover:bg-[var(--color-accent)]"
+                          aria-label={`Remove ${f.name}`}
+                        >
+                          <X className="size-3.5" />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </CardContent>
           </Card>
